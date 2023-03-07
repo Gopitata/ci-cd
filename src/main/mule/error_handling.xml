@@ -9,11 +9,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2c209f5f-c7da-49fb-b9bd-7b19c8a16113" >
-		<http:listener-connection host="localhost" port="8086" />
+		<http:listener-connection host="localhost" port="8081" />
 	</http:listener-config>
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="885a9483-947c-4b2e-b3d7-093b0496dd25" >
-		<db:my-sql-connection host="127.0.0.1" port="3306" user="root" password="Viratian@1234" database="warriors" />
-	</db:config>
 	<file:config name="File_Config" doc:name="File Config" doc:id="6bbc3df9-bd53-42a0-9180-1b4747041008" />
 	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="580b3ebe-4d7c-41bf-9ade-fcb8f015f320" >
 		<salesforce:basic-connection username="Gopi18@apicentrics.com" password="Viratian@12345" securityToken="mUIlvgbjMKFlv2xPymcziv5m9" />
