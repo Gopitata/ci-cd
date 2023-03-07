@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error_handling-suite.xml" />
+	<munit:test name="error_handlingFlow-test" doc:id="243b7ef8-2ed4-4ecd-b5c4-b79a5b6a03af" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="91ea6884-e9f3-4780-b0b5-5f5da34c56a3" >
+				<munit:payload value="#[readUrl('classpath://errorhandlingFlowtest\set-event_payload2.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://errorhandlingFlowtest\set-event_attributes2.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to error_handlingFlow" doc:id="3e3fddb0-17eb-4ecc-931d-7fcb2d36133e" name="error_handlingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="4e0643e6-6f16-4f48-82b3-02a934e08ee3" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import errorhandlingFlowtest::assert_expression_payload2
+---
+assert_expression_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Query" doc:id="3db72232-5de6-4f09-8c96-a1f68e3e0bab" processor="salesforce:query" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9994c173-9931-4059-ae35-979eba3b504a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2c209f5f-c7da-49fb-b9bd-7b19c8a16113" >
+		<http:listener-connection host="localhost" port="8086" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="885a9483-947c-4b2e-b3d7-093b0496dd25" >
+		<db:my-sql-connection host="127.0.0.1" port="3306" user="root" password="Viratian@1234" database="warriors" />
+	</db:config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="6bbc3df9-bd53-42a0-9180-1b4747041008" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="580b3ebe-4d7c-41bf-9ade-fcb8f015f320" >
+		<salesforce:basic-connection username="Gopi18@apicentrics.com" password="Viratian@12345" securityToken="mUIlvgbjMKFlv2xPymcziv5m9" />
+	</salesforce:sfdc-config>
+	<flow name="error_handlingFlow" doc:id="d73809c6-f6c3-4d33-96ba-1434ec6a2e69" >
+		<http:listener doc:name="Listener" doc:id="f1d86243-2344-460f-a35d-51de696beaf6" config-ref="HTTP_Listener_config" path="/error"/>
+		<salesforce:query doc:name="Query" doc:id="9994c173-9931-4059-ae35-979eba3b504a" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT cid__c,City__c,fname__c,lname__c,salary__c FROM customer__c]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<logger level="INFO" doc:name="Logger" doc:id="a3e63da2-0a5b-4b1f-b156-90e65fe91a59" message="#[payload]"/>
+		<foreach doc:name="For Each" doc:id="7fcfbeef-7740-4f25-9b46-c2bd6f0c4e52" >
+			<choice doc:name="Choice" doc:id="75e17984-f1eb-48a5-812e-a62279d9d9c6">
+			<when expression="#[payload.cid__c &gt; 500]">
+				<logger level="INFO" doc:name="Logger" doc:id="701c9da7-ac25-4ad9-8672-2ef8cf767c78" message="#[payload]"/>
+				<ee:transform doc:name="Transform Message" doc:id="015630e1-3eea-4b86-a3f2-120f3ad5e40d">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<file:write doc:name="Write" doc:id="2260cad7-37be-49d5-9ff1-1e3176676294" path="D:/Imp Documents of mule\error1\error.txt" mode="APPEND" config-ref="File_Config">
+					</file:write>
+					<ee:transform doc:name="Transform Message" doc:id="ae8d8113-f790-4923-82eb-e36824b2eec1" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+			</when>
+				<otherwise >
+					<logger level="INFO" doc:name="Logger" doc:id="3164cebf-fcf4-47ce-95cf-0e6952bf7d32" message="#[payload]"/>
+				</otherwise>
+		</choice>
+		</foreach>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="56cee8a4-4bd1-4efe-813d-d46bd03eaa2f" type="ANY">
+				<logger level="INFO" doc:name="Logger" doc:id="1b5e7308-d32e-48d6-b7c0-0d31762aab81" message="#[payload]"/>
+				<set-payload value="success response" doc:name="Set Payload" doc:id="a3812cb4-d32e-45ab-a254-71916d968a23" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error_handling-test-suite.xml" />
+	<munit:test name="error_handling-test-suite-error_handlingFlowTest" doc:id="f3fa1a8a-c09f-416e-9acf-00ffe2ac1731" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9ba92009-ba26-4987-9c29-7f45ac16f972" />
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to error_handlingFlow" doc:id="d0aeca4b-9d72-4dde-bb28-75edc2d08a8a" name="error_handlingFlow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="error_handling-test-suite-error_handlingFlowTest1" doc:id="488aefaa-a33a-401e-a180-2c8ac8a2b86d" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to error_handlingFlow" doc:id="4732c22c-70e1-4a62-bacd-8109506a7c13" name="error_handlingFlow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>
